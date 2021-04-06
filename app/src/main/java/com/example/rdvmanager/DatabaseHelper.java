@@ -1,5 +1,6 @@
 package com.example.rdvmanager;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -89,8 +90,72 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /* CRUD Operation methods */
-    public void add() { }
-    public void update() { }
-    public void delete() { }
-    public Cursor getAllRdv() { return null;}
+
+    /**
+     * Add a new RDV in database
+     * @param pRdv the new RDV to add in the database
+     */
+    public void add(Rdv pRdv) {
+        /* Prepare INSERT Query */
+        final String vQuery =
+                "INSERT INTO " + TABLE_NAME +
+                        "(" + TITLE + "," + DATE + "," + TIME + "," +
+                        PERSON + "," + ADDRESS + "," + PHONE_NUMBER +
+                        "," + DONE + ")" +
+                        " VALUES (" +
+                        "'" + pRdv.getTitle() + "','" + pRdv.getDate() + "','" +
+                        pRdv.getTime() + "','" + pRdv.getPerson() + "','" +
+                        pRdv.getAddress() + "','" + pRdv.getPhoneNumber() + "','" +
+                        (pRdv.isDone()?1:0) +
+                        "');";
+
+        /* Execute the Insert Query */
+        this.database.execSQL(vQuery);
+    }
+
+    /**
+     * Update a Rdv based on its id.
+     * @param pRdv a Rdv with the specigic id and data
+     * @return
+     */
+    public int update(Rdv pRdv) {
+        /* Prepare data for Query */
+        final Long vId = pRdv.getId();
+        ContentValues vContentValues = new ContentValues();
+        vContentValues.put(TITLE, pRdv.getTitle());
+        vContentValues.put(DATE, pRdv.getDate());
+        vContentValues.put(TIME, pRdv.getTime());
+        vContentValues.put(PERSON, pRdv.getPerson());
+        vContentValues.put(ADDRESS, pRdv.getAddress());
+        vContentValues.put(PHONE_NUMBER, pRdv.getPhoneNumber());
+
+        /* Execute the UPDATE Query */
+        int vCount = this.database.update(TABLE_NAME, vContentValues, _ID + " = " + vId, null);
+
+        return vCount;
+    } // update(.)
+
+    /**
+     * Delete a Rdv from database given its id.
+     * @param _id Rdv id
+     */
+    public int delete(long _id) {
+        return this.database.delete(TABLE_NAME, _ID + " = " + _id, null);
+    }
+
+    /**
+     * Returns a Cursor over the list of tuples in
+     * table RDV.
+     * @return Cursor
+     */
+    public Cursor getAllRdv() {
+        /* Prepare columns */
+        final String[] vProjection = {_ID, TITLE, DATE, TIME, PERSON, ADDRESS, PHONE_NUMBER, DONE};
+
+        /* Query the database over the columns */
+        final Cursor vCursor = this.database.query(TABLE_NAME, vProjection, null,
+                null,null,null,null,null);
+
+        return vCursor;
+    }
 }

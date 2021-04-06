@@ -12,8 +12,8 @@
 
         <!-- Add new RDV -->
         <activity
-            android:name=".Rdv"
-            android:label="RDV Details"
+            android:name=".RdvAddActivity"
+            android:label="Add RDV"
         />
 
         <!-- Main Activity -->

@@ -50,6 +50,14 @@ public class Rdv implements Parcelable {
     /**
      * Another class constructor.
      */
+    public Rdv(String pTitle, String pDate, String pTime,
+               String pPerson, String pAddress, String pPhoneNumber) {
+        this(-1, pTitle, pDate, pTime, pPerson, pAddress, pPhoneNumber, false);
+    } // Rdv(.......)
+
+    /**
+     * Another class constructor.
+     */
     public Rdv() {
         this(1, null, null, null, null, null,
                 null, false);
